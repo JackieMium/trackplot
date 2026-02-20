@@ -1821,7 +1821,7 @@ summarize_homer_annots = function(anno, sample_names = NULL, legend_font_size = 
   }
   
   cmd = paste0(
-    "mysql --user genome --host genome-mysql.soe.ucsc.edu -NAD ",
+    "mysql --user genome --host genome-mysql.soe.ucsc.edu --skip-ssl -NAD ",
     refBuild,
     " -e 'select chrom, chromStart, chromEnd, name, gieStain from ",  tblName, " WHERE chrom =\"",
     chr,
@@ -1897,7 +1897,7 @@ summarize_homer_annots = function(anno, sample_names = NULL, legend_font_size = 
   
   .check_mysql()
   
-  cmd = paste0("mysql --user genome --host genome-mysql.soe.ucsc.edu -NAD ",  refBuild,  " -e 'select chrom, chromStart, chromEnd, name from ", tbl, " WHERE chrom =\"", tar_chr, "\"'")
+  cmd = paste0("mysql --user genome --host genome-mysql.soe.ucsc.edu --skip-ssl -NAD ",  refBuild,  " -e 'select chrom, chromStart, chromEnd, name from ", tbl, " WHERE chrom =\"", tar_chr, "\"'")
   message(paste0("Extracting chromHMM from UCSC:\n", "    chromosome: ", tar_chr, "\n", "    build: ", refBuild, "\n    query: ", cmd))
   #system(command = cmd)
   ucsc = data.table::fread(cmd = cmd)
@@ -1921,7 +1921,7 @@ summarize_homer_annots = function(anno, sample_names = NULL, legend_font_size = 
   .check_mysql()
   op_file = tempfile(pattern = "ucsc", fileext = ".tsv")
   
-  cmd = paste0("mysql --user genome --host genome-mysql.soe.ucsc.edu -NAD ",  refBuild,  " -e 'select chrom, txStart, txEnd, strand, name, name2, exonStarts, exonEnds from refGene WHERE name2 =\"", genesymbol, "\"'")
+  cmd = paste0("mysql --user genome --host genome-mysql.soe.ucsc.edu --skip-ssl -NAD ",  refBuild,  " -e 'select chrom, txStart, txEnd, strand, name, name2, exonStarts, exonEnds from refGene WHERE name2 =\"", genesymbol, "\"'")
   message(paste0("Extracting gene models from UCSC:\n", "    Gene: ", genesymbol, "\n", "    build: ", refBuild, "\n    query: ", cmd))
   
   ucsc = data.table::fread(cmd = cmd, sep = "\t")
@@ -1946,7 +1946,7 @@ summarize_homer_annots = function(anno, sample_names = NULL, legend_font_size = 
     tar_chr = chr
   }
   
-  cmd = paste0("mysql --user genome --host genome-mysql.soe.ucsc.edu -NAD ",  refBuild,  " -e 'select chrom, txStart, txEnd, strand, name, name2, exonStarts, exonEnds from refGene WHERE chrom =\"", tar_chr, "\"'")
+  cmd = paste0("mysql --user genome --host genome-mysql.soe.ucsc.edu --skip-ssl -NAD ",  refBuild,  " -e 'select chrom, txStart, txEnd, strand, name, name2, exonStarts, exonEnds from refGene WHERE chrom =\"", tar_chr, "\"'")
   message(paste0("Extracting gene models from UCSC:\n", "    chromosome: ", tar_chr, "\n", "    build: ", refBuild, "\n    query: ", cmd))
   #system(command = cmd)
   ucsc = data.table::fread(cmd = cmd)
@@ -2159,7 +2159,7 @@ summarize_homer_annots = function(anno, sample_names = NULL, legend_font_size = 
   
   temp_op_bed = tempfile(pattern = "profileplot_ucsc", tmpdir = op_dir, fileext = ".bed")
   
-  cmd = paste0("mysql --user genome --host genome-mysql.soe.ucsc.edu -NAD ",  refBuild,  " -e 'select chrom, txStart, txEnd, strand, name, name2 from refGene'")
+  cmd = paste0("mysql --user genome --host genome-mysql.soe.ucsc.edu --skip-ssl -NAD ",  refBuild,  " -e 'select chrom, txStart, txEnd, strand, name, name2 from refGene'")
   message(paste0("Extracting gene models from UCSC:\n", "    build: ", refBuild, "\n    query: ", cmd))
   #system(command = cmd)
   ucsc = data.table::fread(cmd = cmd)
