@@ -1701,7 +1701,7 @@ summarize_homer_annots = function(anno, sample_names = NULL, legend_font_size = 
   lo_h_ord[lord]
 }
 
-.gen_windows = function(chr = NA, start, end, window_size = 50, op_dir = getwd()){
+.gen_windows = function(chr = NA, start, end, window_size = 50, op_dir = getwd(), verbose = FALSE){
   #chr = "chr19"; start = 15348301; end = 15391262; window_size = 50; op_dir = getwd()
   message(paste0("Generating windows ", "[", window_size, " bp window size]"))
   
@@ -1714,7 +1714,9 @@ summarize_homer_annots = function(anno, sample_names = NULL, legend_font_size = 
   window_dat$chr = chr
   window_dat = window_dat[, .(chr, start, end)]
   
-  print(window_dat)
+  if(verbose) {
+      print(window_dat)
+  }
   
   op_dir = paste0(op_dir, "/")
   
@@ -1813,7 +1815,7 @@ summarize_homer_annots = function(anno, sample_names = NULL, legend_font_size = 
   }
 }
 
-.extract_cytoband = function(chr = NULL, refBuild = "hg19", tblName = "cytoBand"){
+.extract_cytoband = function(chr = NULL, refBuild = "hg19", tblName = "cytoBand", verbose = FALSE){
   
   if(!grepl(pattern = "^chr", x = chr)){
     message("Adding chr prefix to target chromosome for UCSC query..")
@@ -1827,8 +1829,9 @@ summarize_homer_annots = function(anno, sample_names = NULL, legend_font_size = 
     chr,
     "\"'"
   )
-  message(paste0("Extracting cytobands from UCSC:\n", "    chromosome: ", chr, "\n", "    build: ", refBuild, "\n    query: ", cmd))
-  
+  if(verbose){
+    message(paste0("Extracting cytobands from UCSC:\n", "    chromosome: ", chr, "\n", "    build: ", refBuild, "\n    query: ", cmd))
+  }
   cyto = data.table::fread(cmd = cmd, colClasses = c("character", "numeric", "numeric", "character", "character"))
   colnames(cyto) = c("chr", "start", "end", "band", "stain")
   data.table::setkey(x = cyto, chr, start, end)
@@ -2035,7 +2038,7 @@ summarize_homer_annots = function(anno, sample_names = NULL, legend_font_size = 
 }
 
 .collapse_tx = function(exon_tbls){
-  message("Collapsing transcripts..")
+  #message("Collapsing transcripts..")
   tx_tbl = lapply(exon_tbls, function(x){
     xdt = data.table::data.table(start = x[[1]], end = x[[2]])
     xdt$tx = attr(x = x, which = "tx")
